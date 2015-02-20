@@ -6,7 +6,7 @@ $(document).ready(function () {
         zoomControl: false,
         scrollWheelZoom: false
     })
-	.setView([40.705008, -73.995581], 15);
+	.setView([35.7806, -78.6389], 15);
 
     var markers = new L.FeatureGroup();
 
@@ -98,19 +98,18 @@ $(document).ready(function () {
     }
 
     function constructQuery(sevenDaysAgo, sodaQueryBox) {
-        var originalstr = "https://data.cityofnewyork.us/resource/erm2-nwe9.json?$select=location,closed_date,complaint_type,street_name,created_date,status,unique_key,agency_name,due_date,descriptor,location_type,agency,incident_address&$where=created_date>'"
-			+ sevenDaysAgo
+        var originalstr = "https://brigades.opendatanetwork.com/resource/dyik-sdjy.json?$select=location,ticket_closed_date_time,ticket_created_date_time,ticket_status,ticket_id,issue_type,issue_description"
 			+ "' AND within_box(location,"
 			+ sodaQueryBox
-			+ ")&$order=created_date desc"
+			+ ")&$order=ticket_created_date_time desc"
 
-        var agency = $( "#nycAgency" ).val();
+        var agency = $( "#SCFIssueType" ).val();
         var conditiion = $("#conditions_list").val();
         if (agency.length != 0 && agency != "All") {
-            originalstr = originalstr + "&agency=" + agency;
+            originalstr = originalstr + "&issue_type=" + agency;
         }
         if (conditiion.length != 0 && conditiion != "All") {
-            originalstr = originalstr + "&complaint_type=" + conditiion;
+            originalstr = originalstr + "&issue_type=" + conditiion;
         }
 
         console.log(originalstr);
@@ -120,15 +119,15 @@ $(document).ready(function () {
     function getIcon(thisMarker) {
 
         switch (thisMarker.agency) {
-            case 'TLC':
+            case 'Sidewalks':
                 return tlcIcon;
-            case 'DOT':
+            case 'Potholes':
                 return dotIcon;
-            case 'DPR':
+            case 'Graffiti':
                 return parksIcon;
-            case 'DOB':
+            case 'Parks / Greenways':
                 return buildingsIcon;
-            case 'NYPD':
+            case 'Signals / Signs':
                 return nypdIcon;
             case 'DSNY':
                 return dsnyIcon;
@@ -155,7 +154,7 @@ $(document).ready(function () {
         getData();
     });
 
-    $('#nycAgency').on("change", function () {
+    $('#SCFIssueType').on("change", function () {
         getData();
     });
 
